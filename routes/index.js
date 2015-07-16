@@ -9,7 +9,7 @@ var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/to
 /* GET home page. */
 router.get('/', function(req, res, next) {
   // res.render('index', { title: 'Express' });
-  res.sendFile(path.join(_dirname, '../views', 'index.html'));
+  res.sendFile(path.join(__dirname, '../views', 'index.html'));
 });
 
 /* CREATE single todo action */
