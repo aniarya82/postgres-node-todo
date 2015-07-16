@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+var passport = require('passport');
+
 var path = require('path');
 
 var pg = require('pg');
@@ -147,6 +149,45 @@ router.delete('/api/v1/todos/:todo_id', function (req, res) {
 			console.log(err);
 		}
 	});
+});
+
+// REGISTER
+router.get('/register', function (req, res) {
+	res.render('index', { title: 'Express' });
+	// res.sendFile(path.join(__dirname, '../views', 'register.html'));
+});
+
+router.post('/register', function (req, res) {
+	Account.register(new Account({ username: req.body.username }), req.body.password, function(err, account) {
+		if (err) {
+			console.log(err);
+			return res.render('register', {info: "Sorry. That username already exists. Try again."});
+		}
+
+		passport.authenticate('local')(req, res, function() {
+			console.log("logs for register post data");
+			res.redirect('/');
+		});
+	});
+});
+
+//LOGIN
+router.get('/login', function(req, res) {
+	res.render('login', { user : req.user });
+});
+
+router.post('/login', passport.authenticate('local'), function(req, res) {
+	res.redirect('/');
+});
+
+// LOGOUT
+router.get('/logout', function(req, res) {
+	req.logout();
+	res.redirect('/');
+});
+
+router.get('/ping', function(req, res) {
+	res.status(200).send("pong!!");
 });
 
 module.exports = router;
