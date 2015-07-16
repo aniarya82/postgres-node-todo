@@ -7,6 +7,13 @@
   </head>
   <body ng-controller="mainController">
     <div class="container">
+      <form>
+        <div class="form-group">
+          <input type="text" class="form-control input-lg" placeholder="Add a Todo..." ng-model="formData.text">
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" ng-click="createTodo()">Add Todo</button>
+      </form>
+
       <ul ng-repeat="todo in todoData">
         <li><input type="checkbox" ng-click="deleteTodo(todo.id)">&nbsp;{{ todo.text }}</li>
       </ul>
