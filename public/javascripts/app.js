@@ -27,12 +27,14 @@ angular.module('nodeTodo', [])
         });
 
     // Delete a todo
-    $http.delete('/api/v1/todos/' + todoID)
-        .success(function(data) {
-            $scope.todoData = data;
-            console.log(data);
-        })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
+    $scope.deleteTodo = function(todoId) {
+        $http.delete('/api/v1/todos/' + todoID)
+            .success(function(data) {
+                $scope.todoData = data;
+                console.log(data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+    }
 });
