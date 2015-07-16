@@ -111,4 +111,39 @@ router.put('/api/v1/todos/:todo_id', function (req, res) {
 	});
 });
 
+// DELETE todo in the items table
+router.delete('/api/v1/todos/:todo_id', function (req, res) {
+
+	var results = [];
+
+	// Grab data from the URL paramaters
+	var id = req.params.todo_id;
+
+	// Get the postgres client from the connection pool
+	pg.connect(connectionString, function (err, client,done) {
+
+		// SQL query > Delete data
+		client.query("DELETE FROM items WHERE id=($1)", [id]);
+
+		// SQL query > Select data
+		var query = client.query("SELECT * FROM items ORDER BY id ASC");
+
+		// Stream the results back one row at a time
+		query.on('row', function (row) {
+			results.push(row);
+		});
+
+		// After the result being streamed back, close the connection and return the result back
+		query.on('end', function() {
+			client.end();
+			return res.json(results);
+		});
+
+		// Handle errors
+		if (err) {
+			console.log(err);
+		}
+	});
+});
+
 module.exports = router;
