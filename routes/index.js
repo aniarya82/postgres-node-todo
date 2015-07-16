@@ -72,4 +72,43 @@ router.get('/api/v1/todos', function (req, res) {
 	});
 });
 
+// UPDATE todo in the items table
+router.put('/api/v1/todos/:todo_id', function (req, res) {
+
+	var results = [];
+
+	// Grab data from URL parameters
+	var id = req.params.todo_id;
+
+	// Grab data from http request
+	var data = {text: req.body.text, complete: req.body.complete};
+
+	// Get the postgres client from the connection pool
+	pg.connect(connectionString, function (err, client, done) {
+
+		// SQL query > Updata dara
+		client.query("UPDATE items SET text=($1), complete=($2) WHERE id=($3)", [data.text, data.complete, id]);
+
+		// SQL query > Select data
+		var query = client.query("SELECT * FROM items ORDER BY id ASC");
+
+		// Stream the results back one row at a time
+		query.on('row', function(row) {
+			results.push(row);
+		});
+
+		// After all resiults are steamed bacjk close the connection and return the result
+		query.on('end', function() {
+			client.end();
+			return res.json(results);
+		});
+
+		// Handle errors
+		if(err) {
+			console.log(err);
+		}
+
+	});
+});
+
 module.exports = router;
