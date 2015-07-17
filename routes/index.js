@@ -153,7 +153,7 @@ router.delete('/api/v1/todos/:todo_id', function (req, res) {
 
 // REGISTER
 router.get('/register', function (req, res) {
-	res.render('index', { title: 'Express' });
+	res.render('register', { });
 	// res.sendFile(path.join(__dirname, '../views', 'register.html'));
 });
 
