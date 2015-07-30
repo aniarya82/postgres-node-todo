@@ -5,7 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 //adding additon dependencies
-var pg = require('pg');
+var pg = require('pg').native;
+var Sequelize = require('sequelize');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
@@ -33,8 +34,26 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// var sequelize = new Sequelize('postgres://localhost:5432/todo');
+
+// var User = sequelize.define('people', {
+//   username: Sequelize.STRING,
+//   password: Sequelize.STRING,
+// },
+// {
+//   timestamps: true // timestamps will now be true
+// }
+// );
+
+// User.sync();
+
+passport.use(users.localStrategy);
+// passport.use(auth.twitterStrategy());
+// passport.use(auth.facebookStrategy());
+// passport.use(auth.googleStrategy());
+
 app.use('/', routes);
-app.use('/users', users);
+// app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
