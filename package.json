@@ -19,8 +19,10 @@
     "passport-local": "^1.0.0",
     "passport-twitter": "~1.0.2",
     "pg": "^4.4.0",
+    "pg-hstore": "~2.3.2",
     "pg-native": "~1.8.1",
     "serve-favicon": "~2.2.1",
-    "sequelize": "~3.4.1"
+    "sequelize": "~3.4.1",
+    "underscore": "~1.6.0"
   }
 }
