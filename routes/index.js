@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var passport = require('passport');
+var User = require('./users.js');
 
 var path = require('path');
 
@@ -158,16 +159,14 @@ router.get('/register', function (req, res) {
 });
 
 router.post('/register', function (req, res) {
-	Account.register(new Account({ username: req.body.username }), req.body.password, function(err, account) {
+	User.addUser(req.body.username, req.body.password, function(err, user) {
 		if (err) {
 			console.log(err);
 			return res.render('register', {info: "Sorry. That username already exists. Try again."});
+		} else {
+			console.log("successfully registered");
 		}
-
-		passport.authenticate('local')(req, res, function() {
-			console.log("logs for register post data");
-			res.redirect('/');
-		});
+		res.json(200,{user: user.username});
 	});
 });
 
@@ -176,8 +175,22 @@ router.get('/login', function(req, res) {
 	res.render('login', { user : req.user });
 });
 
-router.post('/login', passport.authenticate('local'), function(req, res) {
-	res.redirect('/');
+// router.post('/login', passport.authenticate('local'), function(req, res) {
+// 	res.redirect('/');
+// });
+
+router.post('/login', function(req, res, next) {
+	passport.authenticate('local', function(err, user) {
+		if (err) {
+			return next(err);
+		};
+		if (!user) {
+			console.log("[login] User not found");
+			return res.send(400);
+		};
+		console.log("[login] successfully logged in");
+		res.json(200, {"username": user.username });
+	})(req, res, next);
 });
 
 // LOGOUT
